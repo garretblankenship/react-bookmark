@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { createBookmark } from "./../../actions";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
+import Input from "./fields/Input";
 
 class BookmarkForm extends Component {
     onFormSubmit = async (formValues) => {
@@ -19,7 +20,7 @@ class BookmarkForm extends Component {
                     <label>Title</label>
                     <Field
                         name="title"
-                        component="input"
+                        component={Input}
                         type="text"
                     />
                 </div>
@@ -27,7 +28,7 @@ class BookmarkForm extends Component {
                     <label>Url</label>
                     <Field
                         name="url"
-                        component="input"
+                        component={Input}
                         type="text"
                     />
                 </div>
@@ -38,7 +39,20 @@ class BookmarkForm extends Component {
 }
 
 const WrappedBookmarkForm = reduxForm({
-    form: "bookmark"
+    form: "bookmark",
+    validate: (formValues) => {
+        const errors = {};
+
+        if(!formValues.title) {
+            errors.title = "Title is required";
+        }
+
+        if(!formValues.url) {
+            errors.url = "Url is required";
+        }
+
+        return errors;
+    }
 })(BookmarkForm);
 
 export default connect(null, { createBookmark })(WrappedBookmarkForm);
